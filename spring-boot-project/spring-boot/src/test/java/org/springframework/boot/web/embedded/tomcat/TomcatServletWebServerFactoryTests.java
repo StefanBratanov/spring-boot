@@ -653,6 +653,9 @@ class TomcatServletWebServerFactoryTests extends AbstractServletWebServerFactory
 	protected Map<String, String> getActualMimeMappings() {
 		Context context = (Context) ((TomcatWebServer) this.webServer).getTomcat().getHost().findChildren()[0];
 		Map<String, String> mimeMappings = new HashMap<>();
+		// If Tomcat adds a new mapping, it'll get overwritten by Boot's mappings, so
+		// re-adding them manually to ensure both mappings are in sync
+		Tomcat.addDefaultMimeTypeMappings(context);
 		for (String extension : context.findMimeMappings()) {
 			mimeMappings.put(extension, context.findMimeMapping(extension));
 		}
